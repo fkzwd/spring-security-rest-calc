@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
-@Component
+
 public class ExpressionDTO {
     String expression;
     String precision;
@@ -52,12 +52,12 @@ public class ExpressionDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ExpressionDTO that = (ExpressionDTO) o;
-        return Objects.equals(getExpression(), that.getExpression()) && Objects.equals(getPrecision(), that.getPrecision()) && Objects.equals(getTime(), that.getTime()) && Objects.equals(getDate(), that.getDate());
+        return Objects.equals(getExpression(), that.getExpression());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getExpression(), getPrecision(), getTime(), getDate());
+        return Objects.hash(getExpression());
     }
 
     @Override

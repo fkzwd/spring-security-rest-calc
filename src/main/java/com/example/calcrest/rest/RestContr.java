@@ -9,6 +9,7 @@ import com.example.calcrest.service.UserService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.*;
 
 @RestController
@@ -23,23 +24,31 @@ public class RestContr {
     @Autowired
     UserService userService;
 
-    private Queue<Double> RESULTLIST = new PriorityQueue<>(10);
-
+    LinkedHashMap<ExpressionDTO, Double> MAP = new LinkedHashMap<>(10);
 
     @PostMapping("/add")
-    public Map<ExpressionDTO, Double> add(@RequestBody Expression expression) throws Exception {
+    public LinkedHashMap<ExpressionDTO, Double> add(@RequestBody Expression expression) throws Exception {
+        double result = 0;
         if (calcService.isValid(expression.getExpression())) {
-            double result = calcService.getAnswer(calcService.ReversePolishNotation(expression.getExpression()));
+            result = calcService.getAnswer(calcService.ReversePolishNotation(expression.getExpression()));
             result = calcService.roundAvoid(result, Integer.parseInt(expression.getPrecision()));
-            RESULTLIST.add(result);
         }
-        ExpressionDTO expressionDTO = expressionService.setExpressionDTO(expression);
 
-        Map<ExpressionDTO, Double> map = new HashMap<>();
-        map.put(expressionDTO, RESULTLIST.peek());
+        ExpressionDTO expressionDTO = expressionService.setExpressionDTO(expression);
+        if (MAP.size() < 10) {
+            MAP.put(expressionDTO, result);
+        } else {
+
+            for (Map.Entry<ExpressionDTO, Double> entry : MAP.entrySet()) {
+
+                MAP.remove(entry.getKey());
+                MAP.put(expressionDTO,result);
+                break;
+            }
+        }
 
         expressionService.addExpressionForUser(expression);
-        return map;
+        return MAP;
     }
 
     @GetMapping("/{username}")

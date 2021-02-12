@@ -14,8 +14,7 @@ import java.util.Collections;
 @Service
 public class ExpressionService {
 
-    @Autowired
-    ExpressionDTO expressionDTO;
+
 
     @Autowired
     UserRepository userRepository;
@@ -33,6 +32,7 @@ public class ExpressionService {
     public ExpressionDTO setExpressionDTO(Expression expression){
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ExpressionDTO expressionDTO = new ExpressionDTO();
         expressionDTO.setExpression(expression.getExpression());
         expressionDTO.setPrecision(expression.getPrecision());
         expressionDTO.setDate(LocalDate.now());
