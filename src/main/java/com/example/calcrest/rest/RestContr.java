@@ -37,6 +37,19 @@ public class RestContr {
         private static CacheKey of(String expression, String precision) {
             return new CacheKey(expression, precision);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            CacheKey cacheKey = (CacheKey) o;
+            return Objects.equals(expression, cacheKey.expression) && Objects.equals(precision, cacheKey.precision);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(expression, precision);
+        }
     }
 
     @PostConstruct
